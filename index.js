@@ -1,6 +1,7 @@
-import  generate  from 'qrcode-terminal';
+import  pkk  from 'qrcode-terminal';
 
 import pkg from 'whatsapp-web.js';
+const qrcode =pkk
 const { Client, LocalAuth } = pkg;
 import{ chatEkle,modChange,} from './funcions.js';
 
@@ -12,7 +13,7 @@ const client = new Client({
 });
 
 client.on('qr', qr => {
-    generate(qr, {small: true});
+    qrcode.generate(qr, {small: true});
 });
 
 client.on('ready', () => {
@@ -72,13 +73,7 @@ client.on('message_create', async  (msg) => {
        const chat = await msg.getChat();
 
         msg.reply('Şuanda çalıyorum kısa bir süre içinde size döneceğim  @Asistan')
-        const data= new Date(msg.timestamp);
-         console.log('saat'+data.getHours());
-         console.log('dakika'+data.getMinutes());
-         console.log('saniye'+data.getSeconds());
-         console.log('yıl'+data.getFullYear());
-         console.log('ay'+data.getMonth());
-         console.log('gün'+data.getDate());
+       
         
           
     }
