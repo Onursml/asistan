@@ -1,6 +1,8 @@
-const qrcode = require('qrcode-terminal');
+import  generate  from 'qrcode-terminal';
 
-const { Client,LocalAuth } = require('whatsapp-web.js');
+import pkg from 'whatsapp-web.js';
+const { Client, LocalAuth } = pkg;
+import{ chatEkle,modChange,} from './funcions.js';
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -10,11 +12,17 @@ const client = new Client({
 });
 
 client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
+    generate(qr, {small: true});
 });
 
 client.on('ready', () => {
     console.log('Client is ready!');
+    client.getChats().then(chats => {
+        const onurChat = chats.find(chat => chat.name === 'Onur');
+        console.log(onurChat.id._serialized);
+    
+    });
+  
 });
 
 const user =[
@@ -22,7 +30,18 @@ const user =[
     {ad:"halil"},
     {ad:"zeynep"}
 ]
-client.on('message_create', (msg) => {
+ export let state ={
+    mod:2
+ }
+
+ export let allowchat=[
+    { serialized:"905523000252@c.us", ad:"onur", chat:true,
+lastmsg : new Date() },
+
+ ]
+client.on('message_create', async  (msg) => {
+    
+
     
     // Fired on all message creations, including your own
     if (msg.fromMe) {
@@ -30,14 +49,41 @@ client.on('message_create', (msg) => {
         if (msg.body == 'TEST') {
             // Send a new message as a reply to the current one
             msg.reply('TEST ÇALIŞIYOR');
+            console.log(msg.from);
         
         }
-      else if (msg.body == 'TEST2') {
-        user.forEach(user => client.sendMessage(msg.from, user.ad))
-       }
      
+     else if (msg.body.startsWith('!get')) {
+    
+    }
   
-}});
+
+
+    else if (msg.body.startsWith('!mod')) {
+        modChange(msg,client,state); }
+
+    else if (msg.body.startsWith('!chatekle')) {
+        chatEkle(msg,allowchat);
+
+  
+    }
+
+    else if (msg.body.startsWith('!')) {
+       const chat = await msg.getChat();
+
+        msg.reply('Şuanda çalıyorum kısa bir süre içinde size döneceğim  @Asistan')
+        const data= new Date(msg.timestamp);
+         console.log('saat'+data.getHours());
+         console.log('dakika'+data.getMinutes());
+         console.log('saniye'+data.getSeconds());
+         console.log('yıl'+data.getFullYear());
+         console.log('ay'+data.getMonth());
+         console.log('gün'+data.getDate());
+        
+          
+    }
+}
+
+});
 
 client.initialize();
- 
