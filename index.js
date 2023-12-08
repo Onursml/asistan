@@ -4,6 +4,7 @@ import pkg from 'whatsapp-web.js';
 const qrcode =pkk
 const { Client, LocalAuth } = pkg;
 import{ chatEkle,modChange,} from './funcions.js';
+import {  main } from './openia.js';
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -18,11 +19,9 @@ client.on('qr', qr => {
 
 client.on('ready', () => {
     console.log('Client is ready!');
-    client.getChats().then(chats => {
-        const onurChat = chats.find(chat => chat.name === 'Onur');
-        console.log(onurChat.id._serialized);
     
-    });
+    
+  
   
 });
 
@@ -40,9 +39,14 @@ const user =[
 lastmsg : new Date() },
 
  ]
+
+ export let gbtmgs=[]
+
+
 client.on('message_create', async  (msg) => {
     
-
+    const chat= await msg.getChat()
+  
     
     // Fired on all message creations, including your own
     if (msg.fromMe) {
@@ -70,14 +74,14 @@ client.on('message_create', async  (msg) => {
     }
 
     else if (msg.body.startsWith('!')) {
-       const chat = await msg.getChat();
-
-        msg.reply('Şuanda çalıyorum kısa bir süre içinde size döneceğim  @Asistan')
-       
-        
-          
-    }
+     main(msg) }
 }
+ else if(!chat.isGroup){
+    if(state.mod==2){
+        main(msg)
+    }
+ }
+
 
 });
 
